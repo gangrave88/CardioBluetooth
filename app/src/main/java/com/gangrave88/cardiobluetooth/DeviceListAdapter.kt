@@ -6,9 +6,15 @@ import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.bt_item_device.view.*
 
-class DeviceListAdapter(val devices:MutableSet<BTDevice>): RecyclerView.Adapter<DeviceListAdapter.Holder>() {
+class DeviceListAdapter(var devices:MutableSet<BTDevice>?): RecyclerView.Adapter<DeviceListAdapter.Holder>() {
+
+    init {
+        if (devices==null)
+            devices = mutableSetOf()
+    }
+
     override fun onBindViewHolder(holder: Holder?, position: Int) {
-        holder?.bind(devices.elementAt(position))
+        if (devices != null) devices?.elementAt(position)?.let { holder?.bind(it) }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): Holder {
@@ -17,7 +23,10 @@ class DeviceListAdapter(val devices:MutableSet<BTDevice>): RecyclerView.Adapter<
     }
 
     override fun getItemCount(): Int {
-        return devices.size
+        if (devices != null) {
+            return devices!!.size
+        }
+        return 0
     }
 
     class Holder(itemView:View):RecyclerView.ViewHolder(itemView){
